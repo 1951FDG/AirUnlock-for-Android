@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.app.SearchManager;
 
 
 
@@ -135,7 +136,28 @@ public class MainActivity extends Activity {
 
         }
 
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Log.i(TAG, action);
 
+        if (action != null && action.equals("com.google.android.gms.actions.SEARCH_ACTION")) {
+            final String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i(TAG, query);
+
+            if (query.equals("lock")) {
+                Intent updateService = new Intent()
+                        .setAction("android.intent.action.airunlockmac")
+                        .putExtra("REQUEST_CODE", BLEService.INTENT_REQ_LOCK);
+                sendBroadcast(updateService);
+            }
+            else if (query.equals("unlock"))
+            {
+                Intent updateService = new Intent()
+                        .setAction("android.intent.action.airunlockmac")
+                        .putExtra("REQUEST_CODE", BLEService.INTENT_REQ_UNLOCK);
+                sendBroadcast(updateService);
+            }
+        }
 
 
 
